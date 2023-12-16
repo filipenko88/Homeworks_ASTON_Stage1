@@ -14,7 +14,7 @@ public abstract class Animal implements Comparable<Animal> {
     //
     @Override
     public String toString(){
-        return this.getClass().toString()+": "+name;
+        return this.getClass().toString()+": "+name +" "+ weight;
     }
 
     // пока не использую, надо разобраться с вложенными статическими классами
@@ -41,9 +41,7 @@ public abstract class Animal implements Comparable<Animal> {
 
     @Override
     public int compareTo(Animal animal){
-        if (this.equals(animal)) return 0;
-        else if (this.weight>animal.weight) return 1;
-        else return -1;
+        return this.getName().compareTo(animal.getName());
     }
 
     // геттеры

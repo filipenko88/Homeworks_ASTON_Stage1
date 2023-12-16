@@ -1,7 +1,8 @@
+import java.util.Comparator;
 import java.util.List;
 
 // класс-обёртка над элементами, последовательно связанными друг с другом
-public class MyLinkedList<T>{
+public class MyLinkedList<T extends Comparable<? super T>>{
     private MyLink first;    // ссылка на 1-й элемент
     private MyLink last;     // ссылка на последний элемент
     private int size;
@@ -16,10 +17,11 @@ public class MyLinkedList<T>{
 
     public MyLinkedList(List<T> list){
         size = list.size();
-        MyLink prevLink = new MyLink(list.get(0), null, null);
-        MyLink curLink = new MyLink(list.get(1), prevLink, null);
+        MyLink prevLink =  new MyLink(list.get(0), null, null);
+        MyLink curLink =new MyLink(list.get(1), prevLink, null);
         prevLink.next = curLink;
-        for(int i=0; i<list.size(); i++){
+        first = prevLink;
+        for(int i=2; i<list.size(); i++){
                 prevLink = curLink;
                 curLink = new MyLink(list.get(i), prevLink, null);
                 prevLink.next = curLink;
@@ -27,11 +29,16 @@ public class MyLinkedList<T>{
         last = curLink;
     }
 
+    // проверка на отсутствие элементов в коллекции
+    public boolean isEmpty() {
+        return size==0;
+    }
+
     // 1. Получить элемент по индексу
     public T get(int index) {   // уточнить: искать можно с конца
-        MyLink link = first;
+        MyLink<T> link = first;
         for(int i=0; i<size; i++)
-            if (i==index){ return (T) link.getObj();}
+            if (i==index){ return link.getObj();}
             else{ link = link.next;}
         return null;
     }
@@ -95,13 +102,28 @@ public class MyLinkedList<T>{
     }
 
     // 5. Сортировка элементов методом пузырька
-    public void sort(){
+    public void sort(Comparator<T> comparator){
+        for(int i=0; i<size-1; i++)
+            for (int j = 0; j < (size-1)-i; j++) {
+                MyLink<T> link1 = getLink(j);
+                MyLink<T> link2 = getLink(j + 1);
+                if (comparator.compare( link1.obj, link2.obj) > 0)
+                    reput(link1, link2);
+            }
 
     }
 
+    // для наглядного вывода
+    public String toString(){
+        StringBuilder str = new StringBuilder();
+        for(int i=0; i<size; i++){
+            str.append(get(i).toString()+" \n");
+        }
+        return str.toString();
+    }
 
     // внутренний метод: возвращает элемент-обёртку по индексу
-    private MyLink getLink(int index){
+    private MyLink<T> getLink(int index){
         if (index<size){
             MyLink link = first;
             for(int i=0; i<size; i++) {
@@ -112,6 +134,14 @@ public class MyLinkedList<T>{
         }
         return null;
     }
+    // внутренний метод: меняет местами объекты в элементах-обёртках (т.е. перекладывает)
+    private void reput(MyLink<T> link1, MyLink<T> link2){
+        T obj = link1.obj;
+        link1.obj = link2.obj;
+        link2.obj = obj;
+    }
+
+
 
     // внутренний класс-обёртка над объектами в составе MyLinkedList
      private class MyLink<T>{

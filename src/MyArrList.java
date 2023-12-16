@@ -1,5 +1,3 @@
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.List;
 
 // Класс-обёртка над массивом элементов одного типа
@@ -8,7 +6,7 @@ public class MyArrList<T extends Comparable<? super T>> { //implements List<T>
     private int size=0;
     private int capacity = -1;
 
-        // количество элементов, на которое увеличивается массив
+    // количество элементов, на которое увеличивается массив
     public int getCapacity(){
         return (capacity>0)?elements.length/2:capacity;
     }
@@ -18,19 +16,14 @@ public class MyArrList<T extends Comparable<? super T>> { //implements List<T>
 
     //- конструктор
     public MyArrList(int length){
-       this.elements = (T[]) new Object[length];
-      // this.elements = (T[]) Array.newInstance(clazz, length);
+       this.elements = (T[]) new Comparable[length];
     }
     //- перегружаем конструктор
     public MyArrList(List<T> list) {
         size = list.size();
-        elements = (T[]) new Object[size];
-
-        for(int i=0; i<size; i++) {
-            elements[i] = (T) elements[i];
-            elements[i] = (T) list.get(i);
-        }
-
+        elements = (T[]) new Comparable[size];
+        for(int i=0; i<size; i++)
+            elements[i] = list.get(i);
     }
     // размер списка - соответствует размеру МАССИВА, ЗАДЕЙСТВОВАННОГО ПОЛЬЗОВАТЕЛЕМ
     public int size() {
@@ -128,7 +121,7 @@ public class MyArrList<T extends Comparable<? super T>> { //implements List<T>
     // вспомогательный метод, переписывающий elements в новый массив длиной length до позиции index включительно
     private T[] rewriteElements(int length, int index){
         // создаём временный массив
-        T[] temp = (T[]) new Object[length];
+        T[] temp = (T[]) new Comparable[length];
         // переписываем в него elements и присваиваем эту ссылку
         for(int i=0; i<=index ; i++)
             temp[i] = elements[i];
@@ -143,7 +136,6 @@ public class MyArrList<T extends Comparable<? super T>> { //implements List<T>
         }
         return str.toString();
     }
-
 
     // ДЛЯ ОТЛАДКИ длина внутреннего массива
     public int getLen() {
