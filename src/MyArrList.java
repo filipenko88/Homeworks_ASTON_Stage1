@@ -8,7 +8,7 @@ public class MyArrList<T extends Comparable<? super T>> { //implements List<T>
 
     // количество элементов, на которое увеличивается массив
     public int getCapacity(){
-        return (capacity>0)?elements.length/2:capacity;
+        return (capacity<0)?elements.length/2:capacity;
     }
     public void setCapacity(int capacity){
         this.capacity = capacity;
